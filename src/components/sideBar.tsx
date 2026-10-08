@@ -1,33 +1,65 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { clearSession } from '@/lib/session';
-import { UiIcon } from '@/components/uiIcon';
-import type { AuthUser } from '@/services/auth/type';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { clearSession } from "@/lib/session";
+import { UiIcon } from "@/components/uiIcon";
+import type { AuthUser } from "@/services/auth/type";
+import { useEffect, useState } from "react";
 
 interface SideBarProps {
   user: AuthUser | null;
   isOpen: boolean;
   onClose: () => void;
-  activePage: 'overview' | 'categories';
+  activePage: "overview" | "categories";
 }
 
 const navItems = [
-  { label: 'Overview', href: '/dashboard', icon: 'grid' as const, key: 'overview' },
-  { label: 'Categories', href: '/categories', icon: 'layers' as const, key: 'categories', badge: 'Active' },
-  { label: 'Stock Movement', href: '/dashboard#stock-movement', icon: 'chart' as const },
-  { label: 'Inventory Health', href: '/dashboard#inventory', icon: 'box' as const },
+  {
+    label: "Overview",
+    href: "/dashboard",
+    icon: "grid" as const,
+    key: "overview",
+  },
+  {
+    label: "Categories",
+    href: "/categories",
+    icon: "layers" as const,
+    key: "categories",
+    badge: "Active",
+  },
+  { label: "Brands", href: "/brands", icon: "tag" as const, key: "brands" },
+  {
+    label: "Stock Movement",
+    href: "/dashboard#stock-movement",
+    icon: "chart" as const,
+  },
+  {
+    label: "Inventory Health",
+    href: "/dashboard#inventory",
+    icon: "box" as const,
+  },
 ];
 
-export default function SideBar({ user, isOpen, onClose, activePage }: SideBarProps) {
+export default function SideBar({
+  user,
+  isOpen,
+  onClose,
+  activePage,
+}: SideBarProps) {
   const router = useRouter();
-  const initial = (user?.name || 'U').slice(0, 1).toUpperCase();
 
+  const [mounted, setMounted] = useState(false);
+  const userName = mounted ? user?.name?.toUpperCase() || "UNKNOW" : "UNKNOW";
+  const initial = mounted ? user?.name?.charAt(0).toUpperCase() || "U" : "U";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   function signOut() {
     clearSession();
     onClose();
-    router.replace('/auth/login');
+    router.replace("/auth/login");
   }
 
   function renderNavLink(item: (typeof navItems)[number], isMobile = false) {
@@ -37,19 +69,19 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
         key={item.href}
         href={item.href}
         onClick={() => isMobile && onClose()}
-        aria-current={isActive ? 'page' : undefined}
+        aria-current={isActive ? "page" : undefined}
         className={`group relative flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-medium transition-all ${
           isActive
-            ? 'bg-emerald-50/90 text-emerald-900 font-semibold shadow-xs'
-            : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900'
+            ? "bg-emerald-50/90 text-emerald-900 font-semibold shadow-xs"
+            : "text-slate-600 hover:bg-slate-100/70 hover:text-slate-900"
         }`}
       >
         <div className="flex items-center gap-3">
           <span
             className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-colors ${
               isActive
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200/80 group-hover:text-slate-800'
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "bg-slate-100 text-slate-500 group-hover:bg-slate-200/80 group-hover:text-slate-800"
             }`}
           >
             <UiIcon name={item.icon} size={16} />
@@ -61,8 +93,8 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
           <span
             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${
               isActive
-                ? 'bg-emerald-200/80 text-emerald-800'
-                : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200/70'
+                ? "bg-emerald-200/80 text-emerald-800"
+                : "bg-slate-100 text-slate-500 group-hover:bg-slate-200/70"
             }`}
           >
             {item.badge}
@@ -81,7 +113,9 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
           tabIndex={0}
           aria-label="Close navigation overlay"
           onClick={onClose}
-          onKeyDown={(e) => (e.key === 'Escape' || e.key === 'Enter') && onClose()}
+          onKeyDown={(e) =>
+            (e.key === "Escape" || e.key === "Enter") && onClose()
+          }
           className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs transition-opacity md:hidden cursor-pointer"
         />
       )}
@@ -90,7 +124,7 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
       <aside
         aria-label="Mobile navigation"
         className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 bg-white p-5 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between pb-6 border-b border-slate-100">
@@ -145,18 +179,22 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
             <UiIcon name="box" size={18} />
           </span>
           <span className="font-bold">
-            Stock<span className="text-emerald-600 font-extrabold">wise</span>
+            Stock<span className="text-emerald-600 font-extrabold">.Com</span>
           </span>
         </Link>
 
         {/* Workspace Card */}
         <div className="mt-6 flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 transition hover:bg-slate-100/70">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-600 text-xs font-bold text-white shadow-xs">
-            N
+            {initial}
           </span>
           <div className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate text-xs font-semibold text-slate-800">Northstar Goods</span>
-            <span className="text-[10px] text-slate-400">Inventory Workspace</span>
+            <span className="truncate text-xs font-semibold text-slate-800">
+              {userName}
+            </span>
+            <span className="text-[10px] text-slate-400">
+              Inventory Workspace
+            </span>
           </div>
           <span className="h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/70" />
         </div>
@@ -167,7 +205,9 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
         </p>
 
         {/* Nav Links */}
-        <nav className="flex flex-col gap-1">{navItems.map((item) => renderNavLink(item))}</nav>
+        <nav className="flex flex-col gap-1">
+          {navItems.map((item) => renderNavLink(item))}
+        </nav>
 
         {/* Bottom Section */}
         <div className="mt-auto space-y-3 pt-4">
@@ -178,8 +218,12 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
                 <UiIcon name="help" size={16} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-slate-800">Support & Guides</p>
-                <p className="text-[10px] text-slate-500">FastAPI backend online</p>
+                <p className="text-xs font-semibold text-slate-800">
+                  Support & Guides
+                </p>
+                <p className="text-[10px] text-slate-500">
+                  alway online 24H & 7/7
+                </p>
               </div>
             </div>
           </div>
@@ -187,15 +231,15 @@ export default function SideBar({ user, isOpen, onClose, activePage }: SideBarPr
           {/* User profile & Sign Out */}
           <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white p-2 shadow-xs">
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-slate-100 text-xs font-bold text-slate-700">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-600 text-xs font-bold text-white shadow-xs">
                 {initial}
               </span>
               <div className="flex min-w-0 flex-1 flex-col">
                 <span className="truncate text-xs font-semibold text-slate-800">
-                  {user?.name || 'Admin User'}
+                  {mounted ? user?.name || "Admin User" : "Admin User"}
                 </span>
                 <span className="truncate text-[10px] text-slate-400">
-                  {user?.email || 'Logged in'}
+                  { mounted ? user?.email || "Logged in" : "Sign In"}
                 </span>
               </div>
             </div>

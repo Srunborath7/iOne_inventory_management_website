@@ -1,29 +1,29 @@
 'use client';
 
 import { UiIcon } from '@/components/uiIcon';
-import { getCategoryImageUrl, type Category } from '@/services/categories';
+import { getBrandImageUrl, type Brand } from '@/services/brands';
 
-interface CategoryDetailModalProps {
+interface BrandDetailModalProps {
   isOpen: boolean;
-  category: Category | null;
+  Brand: Brand | null;
   onClose: () => void;
-  onEdit: (category: Category) => void;
-  onDelete: (category: Category) => void;
+  onEdit: (Brand: Brand) => void;
+  onDelete: (Brand: Brand) => void;
 }
 
-export default function CategoryDetailModal({
+export default function BrandDetailModal({
   isOpen,
-  category,
+  Brand,
   onClose,
   onEdit,
   onDelete,
-}: CategoryDetailModalProps) {
-  if (!isOpen || !category) return null;
+}: BrandDetailModalProps) {
+  if (!isOpen || !Brand) return null;
 
-  const imageUrl = getCategoryImageUrl(category.image_url);
+  const imageUrl = getBrandImageUrl(Brand.image_url);
 
-  const formattedCreated = category.created_at
-    ? new Date(category.created_at).toLocaleDateString('en-US', {
+  const formattedCreated = Brand.created_at
+    ? new Date(Brand.created_at).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -32,8 +32,8 @@ export default function CategoryDetailModal({
       })
     : 'Unknown';
 
-  const formattedUpdated = category.updated_at
-    ? new Date(category.updated_at).toLocaleDateString('en-US', {
+  const formattedUpdated = Brand.updated_at
+    ? new Date(Brand.updated_at).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -55,7 +55,7 @@ export default function CategoryDetailModal({
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-700">
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Category Details
+            Brand Details
           </div>
           <button
             type="button"
@@ -74,7 +74,7 @@ export default function CategoryDetailModal({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageUrl}
-                alt={category.name}
+                alt={Brand.name}
                 className="h-full w-full object-cover transition hover:scale-105 duration-300"
               />
             </div>
@@ -93,14 +93,14 @@ export default function CategoryDetailModal({
           <div>
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold tracking-tight text-slate-900">
-                {category.name}
+                {Brand.name}
               </h2>
               {/* <span className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-[11px] font-semibold text-slate-600">
-                // ID: #{category.id}
+                ID: #{Brand.id}
               </span> */}
             </div>
             <p className="mt-2 text-xs leading-relaxed text-slate-600">
-              {category.description || (
+              {Brand.description || (
                 <span className="italic text-slate-400">No description provided.</span>
               )}
             </p>
@@ -128,7 +128,7 @@ export default function CategoryDetailModal({
             type="button"
             onClick={() => {
               onClose();
-              onDelete(category);
+              onDelete(Brand);
             }}
             className="flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/50 px-3.5 py-2 text-xs font-semibold text-rose-600 transition hover:bg-rose-100/70"
           >
@@ -148,12 +148,12 @@ export default function CategoryDetailModal({
               type="button"
               onClick={() => {
                 onClose();
-                onEdit(category);
+                onEdit(Brand);
               }}
               className="flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-slate-800"
             >
               <UiIcon name="edit" size={14} />
-              <span>Edit Category</span>
+              <span>Edit Brand</span>
             </button>
           </div>
         </div>

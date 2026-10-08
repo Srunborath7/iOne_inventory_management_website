@@ -4,14 +4,14 @@ import { useEffect, useMemo, useState, useTransition, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { UiIcon } from '@/components/uiIcon';
 import {
-  getCategories,
-  deleteCategory,
-  getCategoryImageUrl,
-  type Category,
-} from '@/services/categories';
-import CategoryFormModal from '@/components/categories/CategoryFormModal';
-import CategoryDeleteModal from '@/components/categories/CategoryDeleteModal';
-import CategoryDetailModal from '@/components/categories/CategoryDetailModal';
+  getBrands,
+  deleteBrand,
+  getBrandImageUrl,
+  type Brand,
+} from '@/services/brands';
+import BrandFormModal from '@/components/brands/BrandFormModal';
+import BrandDeleteModal from '@/components/brands/BrandDeleteModal';
+import BrandDetailModal from '@/components/brands/BrandDetailModal';
 import { useToast } from '@/components/toast/ToastContext';
 
 type ViewMode = 'grid' | 'table';
@@ -26,12 +26,12 @@ const toneGradients = [
   'from-teal-500 to-emerald-700',
 ];
 
-function CategoriesContent() {
+function BrandsContent() {
   const toast = useToast();
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [Brands, setBrands] = useState<Brand[]>([]);
   const [search, setSearch] = useState(initialSearch);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
@@ -41,23 +41,23 @@ function CategoriesContent() {
 
   // Modals state
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
+  const [BrandToEdit, setBrandToEdit] = useState<Brand | null>(null);
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+  const [BrandToDelete, setBrandToDelete] = useState<Brand | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [categoryToDetail, setCategoryToDetail] = useState<Category | null>(null);
+  const [BrandToDetail, setBrandToDetail] = useState<Brand | null>(null);
 
-  function fetchCategoriesData() {
-    getCategories()
+  function fetchBrandsData() {
+    getBrands()
       .then((data) => {
-        setCategories(data);
+        setBrands(data);
         setError('');
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to load categories.');
+        setError(err instanceof Error ? err.message : 'Failed to load Brands.');
       })
       .finally(() => {
         setLoading(false);
@@ -66,17 +66,17 @@ function CategoriesContent() {
 
   useEffect(() => {
     let active = true;
-    getCategories()
+    getBrands()
       .then((data) => {
         if (active) {
-          setCategories(data);
+          setBrands(data);
           setError('');
           setLoading(false);
         }
       })
       .catch((err) => {
         if (active) {
-          setError(err instanceof Error ? err.message : 'Failed to load categories.');
+          setError(err instanceof Error ? err.message : 'Failed to load Brands.');
           setLoading(false);
         }
       });
@@ -87,7 +87,7 @@ function CategoriesContent() {
 
   // Filter & Sort
   const filteredAndSorted = useMemo(() => {
-    let list = [...categories];
+    let list = [...Brands];
 
     const q = search.trim().toLowerCase();
     if (q) {
@@ -114,48 +114,48 @@ function CategoriesContent() {
     });
 
     return list;
-  }, [categories, search, sortOrder]);
+  }, [Brands, search, sortOrder]);
 
   // Handlers
   function handleOpenCreate() {
-    setCategoryToEdit(null);
+    setBrandToEdit(null);
     setIsFormOpen(true);
   }
 
-  function handleOpenEdit(cat: Category) {
-    setCategoryToEdit(cat);
+  function handleOpenEdit(cat: Brand) {
+    setBrandToEdit(cat);
     setIsFormOpen(true);
   }
 
-  function handleOpenDelete(cat: Category) {
-    setCategoryToDelete(cat);
+  function handleOpenDelete(cat: Brand) {
+    setBrandToDelete(cat);
     setIsDeleteOpen(true);
   }
 
-  function handleOpenDetail(cat: Category) {
-    setCategoryToDetail(cat);
+  function handleOpenDetail(cat: Brand) {
+    setBrandToDetail(cat);
     setIsDetailOpen(true);
   }
 
   async function handleConfirmDelete() {
-    if (!categoryToDelete) return;
+    if (!BrandToDelete) return;
     setDeleting(true);
     try {
-      await deleteCategory(categoryToDelete.id);
-      setCategories((prev) => prev.filter((c) => c.id !== categoryToDelete.id));
-      toast.success(`Category "${categoryToDelete.name}" was deleted.`);
+      await deleteBrand(BrandToDelete.id);
+      setBrands((prev) => prev.filter((c) => c.id !== BrandToDelete.id));
+      toast.success(`Brand "${BrandToDelete.name}" was deleted.`);
       setIsDeleteOpen(false);
-      setCategoryToDelete(null);
+      setBrandToDelete(null);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Could not delete category.';
+      const msg = err instanceof Error ? err.message : 'Could not delete Brand.';
       toast.error(msg, 'Delete failed');
     } finally {
       setDeleting(false);
     }
   }
 
-  function handleSaveSuccess(saved: Category) {
-    setCategories((prev) => {
+  function handleSaveSuccess(saved: Brand) {
+    setBrands((prev) => {
       const index = prev.findIndex((c) => c.id === saved.id);
       if (index >= 0) {
         const updated = [...prev];
@@ -166,7 +166,7 @@ function CategoriesContent() {
     });
   }
 
-  const withImagesCount = categories.filter((c) => Boolean(c.image_url)).length;
+  const withImagesCount = Brands.filter((c) => Boolean(c.image_url)).length;
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -180,10 +180,10 @@ function CategoriesContent() {
             </span>
           </div>
           <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-            Categories Catalog
+            Brands Catalog
           </h1>
           <p className="mt-1 text-xs text-slate-500">
-            Define, customize, and structure inventory categories across your catalog.
+            Define, customize, and structure inventory Brands across your catalog.
           </p>
         </div>
 
@@ -193,10 +193,10 @@ function CategoriesContent() {
             onClick={() => {
               setLoading(true);
               startTransition(() => {
-                fetchCategoriesData();
+                fetchBrandsData();
               });
             }}
-            title="Refresh categories"
+            title="Refresh Brands"
             className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-xs transition hover:border-slate-300 hover:bg-slate-50 active:scale-95"
           >
             <UiIcon
@@ -211,7 +211,7 @@ function CategoriesContent() {
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 transition hover:from-emerald-700 hover:to-teal-700 active:scale-95"
           >
             <UiIcon name="plus" size={16} />
-            <span>New Category</span>
+            <span>New Brand</span>
           </button>
         </div>
       </div>
@@ -220,10 +220,10 @@ function CategoriesContent() {
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Total Categories
+            Total Brands
           </span>
           <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900">{categories.length}</span>
+            <span className="text-2xl font-black text-slate-900">{Brands.length}</span>
             <span className="text-[11px] font-semibold text-emerald-600">Active</span>
           </div>
         </div>
@@ -235,8 +235,8 @@ function CategoriesContent() {
           <div className="mt-1.5 flex items-baseline gap-2">
             <span className="text-2xl font-black text-slate-900">{withImagesCount}</span>
             <span className="text-[11px] text-slate-500">
-              {categories.length > 0
-                ? `${Math.round((withImagesCount / categories.length) * 100)}% coverage`
+              {Brands.length > 0
+                ? `${Math.round((withImagesCount / Brands.length) * 100)}% coverage`
                 : '0%'}
             </span>
           </div>
@@ -271,7 +271,7 @@ function CategoriesContent() {
           <UiIcon name="search" size={16} />
           <input
             type="text"
-            placeholder="Filter categories..."
+            placeholder="Filter Brands..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="min-w-0 flex-1 bg-transparent text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none"
@@ -341,11 +341,11 @@ function CategoriesContent() {
             <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-rose-100 text-rose-600">
               <UiIcon name="alert-triangle" size={24} />
             </span>
-            <h3 className="mt-3 text-sm font-bold text-rose-900">Unable to load categories</h3>
+            <h3 className="mt-3 text-sm font-bold text-rose-900">Unable to load Brands</h3>
             <p className="mx-auto mt-1 max-w-sm text-xs text-rose-600">{error}</p>
             {error.toLowerCase().includes('token') || error.includes('401') ? (
               <a
-                href="/auth/login?next=/categories&expired=1"
+                href="/auth/login?next=/Brands&expired=1"
                 className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
               >
                 Sign in again
@@ -355,7 +355,7 @@ function CategoriesContent() {
                 type="button"
                 onClick={() => {
                   setLoading(true);
-                  fetchCategoriesData();
+                  fetchBrandsData();
                 }}
                 className="mt-4 rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-rose-700"
               >
@@ -386,7 +386,7 @@ function CategoriesContent() {
               <UiIcon name="layers" size={26} />
             </span>
             <h3 className="mt-4 text-base font-bold text-slate-800">
-              {search ? 'No matching categories' : 'Your category catalog is ready'}
+              {search ? 'No matching Brands' : 'Your Brand catalog is ready'}
             </h3>
             <p className="mx-auto mt-1 max-w-sm text-xs text-slate-500">
               {search
@@ -409,7 +409,7 @@ function CategoriesContent() {
                   className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"
                 >
                   <UiIcon name="plus" size={16} />
-                  <span>Create First Category</span>
+                  <span>Create First Brand</span>
                 </button>
               )}
             </div>
@@ -418,7 +418,7 @@ function CategoriesContent() {
           /* Grid View */
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredAndSorted.map((cat, index) => {
-              const imageUrl = getCategoryImageUrl(cat.image_url);
+              const imageUrl = getBrandImageUrl(cat.image_url);
               const gradientClass = toneGradients[index % toneGradients.length];
 
               return (
@@ -426,7 +426,7 @@ function CategoriesContent() {
                   key={cat.id}
                   className="card-hover-lift group flex flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-xs transition"
                 >
-                  {/* Category Image Header */}
+                  {/* Brand Image Header */}
                   <div
                     onClick={() => handleOpenDetail(cat)}
                     className="relative aspect-video w-full cursor-pointer overflow-hidden bg-slate-100"
@@ -447,9 +447,9 @@ function CategoriesContent() {
                         </span>
                       </div>
                     )}
-                    <span className="absolute right-3 top-3 rounded-full bg-slate-950/60 px-2.5 py-1 font-mono text-[10px] font-semibold text-white backdrop-blur-md">
-                      #{ index + 1}
-                    </span>
+                    {/* <span className="absolute right-3 top-3 rounded-full bg-slate-950/60 px-2.5 py-1 font-mono text-[10px] font-semibold text-white backdrop-blur-md">
+                      #{cat.id}
+                    </span> */}
                   </div>
 
                   {/* Body */}
@@ -491,7 +491,7 @@ function CategoriesContent() {
                         <button
                           type="button"
                           onClick={() => handleOpenEdit(cat)}
-                          title="Edit category"
+                          title="Edit Brand"
                           className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-emerald-50 hover:text-emerald-700"
                         >
                           <UiIcon name="edit" size={15} />
@@ -499,7 +499,7 @@ function CategoriesContent() {
                         <button
                           type="button"
                           onClick={() => handleOpenDelete(cat)}
-                          title="Delete category"
+                          title="Delete Brand"
                           className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
                         >
                           <UiIcon name="trash" size={15} />
@@ -518,8 +518,8 @@ function CategoriesContent() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    <th className="px-5 py-3.5">N</th>
-                    <th className="px-5 py-3.5">Category</th>
+                    <th className='px-5 py-3.5'>N</th>
+                    <th className="px-5 py-3.5">Brand</th>
                     <th className="px-5 py-3.5">Description</th>
                     <th className="px-5 py-3.5">Created</th>
                     <th className="px-5 py-3.5 text-right">Actions</th>
@@ -527,7 +527,7 @@ function CategoriesContent() {
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs">
                   {filteredAndSorted.map((cat, index) => {
-                    const imageUrl = getCategoryImageUrl(cat.image_url);
+                    const imageUrl = getBrandImageUrl(cat.image_url);
                     const gradientClass = toneGradients[index % toneGradients.length];
 
                     return (
@@ -535,7 +535,7 @@ function CategoriesContent() {
                         key={cat.id}
                         className="transition hover:bg-slate-50/60"
                       >
-                        <td className="px-5 py-3.5 font-mono text-slate-400">#{index + 1}</td>
+                        <td className="px-5 py-3.5"> {index + 1} </td>
                         <td className="px-5 py-3.5">
                           <div
                             onClick={() => handleOpenDetail(cat)}
@@ -567,6 +567,7 @@ function CategoriesContent() {
                             <span className="italic text-slate-400">No description</span>
                           )}
                         </td>
+                        <td className="px-5 py-3.5 font-mono text-slate-400">#{cat.id}</td>
                         <td className="px-5 py-3.5 text-slate-500">
                           {cat.created_at
                             ? new Date(cat.created_at).toLocaleDateString('en-US', {
@@ -589,7 +590,7 @@ function CategoriesContent() {
                             <button
                               type="button"
                               onClick={() => handleOpenEdit(cat)}
-                              title="Edit category"
+                              title="Edit Brand"
                               className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-emerald-50 hover:text-emerald-700"
                             >
                               <UiIcon name="edit" size={15} />
@@ -597,7 +598,7 @@ function CategoriesContent() {
                             <button
                               type="button"
                               onClick={() => handleOpenDelete(cat)}
-                              title="Delete category"
+                              title="Delete Brand"
                               className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
                             >
                               <UiIcon name="trash" size={15} />
@@ -617,7 +618,7 @@ function CategoriesContent() {
         {!loading && !error && filteredAndSorted.length > 0 && (
           <div className="mt-4 flex items-center justify-between px-2 text-[11px] text-slate-400">
             <span>
-              Showing {filteredAndSorted.length} of {categories.length} categories
+              Showing {filteredAndSorted.length} of {Brands.length} Brands
             </span>
             <span>Stockwise Inventory Catalog</span>
           </div>
@@ -625,33 +626,33 @@ function CategoriesContent() {
       </div>
 
       {/* Modals */}
-      <CategoryFormModal
+      <BrandFormModal
         isOpen={isFormOpen}
-        categoryToEdit={categoryToEdit}
+        BrandToEdit={BrandToEdit}
         onClose={() => {
           setIsFormOpen(false);
-          setCategoryToEdit(null);
+          setBrandToEdit(null);
         }}
         onSuccess={handleSaveSuccess}
       />
 
-      <CategoryDeleteModal
+      <BrandDeleteModal
         isOpen={isDeleteOpen}
-        category={categoryToDelete}
+        Brand={BrandToDelete}
         onClose={() => {
           setIsDeleteOpen(false);
-          setCategoryToDelete(null);
+          setBrandToDelete(null);
         }}
         onConfirm={handleConfirmDelete}
         loading={deleting}
       />
 
-      <CategoryDetailModal
+      <BrandDetailModal
         isOpen={isDetailOpen}
-        category={categoryToDetail}
+        Brand={BrandToDetail}
         onClose={() => {
           setIsDetailOpen(false);
-          setCategoryToDetail(null);
+          setBrandToDetail(null);
         }}
         onEdit={(cat) => {
           setIsDetailOpen(false);
@@ -666,16 +667,16 @@ function CategoriesContent() {
   );
 }
 
-export default function CategoriesPage() {
+export default function BrandsPage() {
   return (
     <Suspense
       fallback={
         <div className="p-8 text-center text-xs text-slate-400">
-          Loading category workspace…
+          Loading Brand workspace…
         </div>
       }
     >
-      <CategoriesContent />
+      <BrandsContent />
     </Suspense>
   );
 }
