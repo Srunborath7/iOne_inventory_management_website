@@ -31,7 +31,12 @@ export type IconName =
   | 'folder'
   | 'filter'
   | 'more-vertical'
-  | 'tag';
+  | 'tag'
+  | 'user'
+  | 'clock'
+  | 'history'
+  | 'activity'
+  | 'file-text';
 
 export function UiIcon({
   name,
@@ -237,10 +242,43 @@ export function UiIcon({
         <circle cx="12" cy="19" r="1.5" />
       </>
     ),
-    'tag': (
+    tag: (
       <>
         <path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H4a1 1 0 0 0-1 1v5.59a2 2 0 0 0 .59 1.41l9.59 9.59a2 2 0 0 0 2.82 0l4.59-4.59a2 2 0 0 0 0-2.82Z" />
         <circle cx="7" cy="7" r="1" />
+      </>
+    ),
+    user: (
+      <>
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </>
+    ),
+    clock: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </>
+    ),
+    history: (
+      <>
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+        <polyline points="12 7 12 12 15 15" />
+      </>
+    ),
+    activity: (
+      <>
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+      </>
+    ),
+    'file-text': (
+      <>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+        <polyline points="10 9 9 9 8 9" />
       </>
     ),
   };

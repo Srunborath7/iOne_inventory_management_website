@@ -52,7 +52,7 @@ export default function NavBar({
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/categories?search=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   }
 
@@ -77,7 +77,10 @@ export default function NavBar({
             <span>Workspace</span>
           </Link>
           <span className="hidden text-slate-300 sm:inline">/</span>
-          <span className="flex items-center gap-1.5 font-semibold text-slate-900">
+          <span
+            suppressHydrationWarning
+            className="flex items-center gap-1.5 font-semibold text-slate-900"
+          >
             {pageTitle}
           </span>
         </nav>

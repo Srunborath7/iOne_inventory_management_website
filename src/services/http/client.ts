@@ -2,10 +2,12 @@ import { ApiError } from '@/types/api.types';
 import { logger } from '@/lib/logger';
 import { getAccessToken, clearSession } from '@/lib/session';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+const RAW_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
+const BASE_URL = RAW_BASE.replace(/^['"]|['"]$/g, '').trim().replace(/\/+$/, '');
 
 async function request<T>(method: string, path: string, options?: RequestInit): Promise<T> {
-  const url = `${BASE_URL}${path}`;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const url = `${BASE_URL}${cleanPath}`;
 
   const token = getAccessToken();
 

@@ -32,20 +32,10 @@ function updateState(update: Partial<AppState> | ((current: AppState) => Partial
   listeners.forEach((listener) => listener());
 }
 
-function getInitialUser(): AuthUser | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = localStorage.getItem('inventory_user_data');
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
 state = {
   sidebarCollapsed: false,
   accessToken: null,
-  currentUser: getInitialUser(),
+  currentUser: null,
   tabs: [],
   setSidebarCollapsed: (sidebarCollapsed) => updateState({ sidebarCollapsed }),
   setAccessToken: (accessToken) => updateState({ accessToken }),

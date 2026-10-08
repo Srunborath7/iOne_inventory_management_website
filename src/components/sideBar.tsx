@@ -7,37 +7,63 @@ import { UiIcon } from "@/components/uiIcon";
 import type { AuthUser } from "@/services/auth/type";
 import { useEffect, useState } from "react";
 
+import type { IconName } from "@/components/uiIcon";
+
 interface SideBarProps {
   user: AuthUser | null;
   isOpen: boolean;
   onClose: () => void;
-  activePage: "overview" | "categories";
+  activePage: "overview" | "products" | "categories" | "brands" | "activities";
 }
 
-const navItems = [
+interface NavItem {
+  label: string;
+  href: string;
+  icon: IconName;
+  key?: "overview" | "products" | "categories" | "brands" | "activities";
+  badge?: string;
+}
+
+const navItems: NavItem[] = [
   {
     label: "Overview",
     href: "/dashboard",
-    icon: "grid" as const,
+    icon: "grid",
     key: "overview",
+  },
+  {
+    label: "Products",
+    href: "/products",
+    icon: "box",
+    key: "products",
   },
   {
     label: "Categories",
     href: "/categories",
-    icon: "layers" as const,
+    icon: "layers",
     key: "categories",
-    badge: "Active",
   },
-  { label: "Brands", href: "/brands", icon: "tag" as const, key: "brands" },
+  {
+    label: "Brands",
+    href: "/brands",
+    icon: "tag",
+    key: "brands",
+  },
+  {
+    label: "Activity Logs",
+    href: "/activities",
+    icon: "history",
+    key: "activities",
+  },
   {
     label: "Stock Movement",
     href: "/dashboard#stock-movement",
-    icon: "chart" as const,
+    icon: "chart",
   },
   {
     label: "Inventory Health",
     href: "/dashboard#inventory",
-    icon: "box" as const,
+    icon: "trending-up",
   },
 ];
 
@@ -70,6 +96,7 @@ export default function SideBar({
         href={item.href}
         onClick={() => isMobile && onClose()}
         aria-current={isActive ? "page" : undefined}
+        suppressHydrationWarning
         className={`group relative flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-medium transition-all ${
           isActive
             ? "bg-emerald-50/90 text-emerald-900 font-semibold shadow-xs"
@@ -78,6 +105,7 @@ export default function SideBar({
       >
         <div className="flex items-center gap-3">
           <span
+            suppressHydrationWarning
             className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-colors ${
               isActive
                 ? "bg-emerald-600 text-white shadow-xs"
