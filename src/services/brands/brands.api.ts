@@ -45,13 +45,12 @@ export async function deleteBrand(id: number | string): Promise<void> {
 
 export function getBrandImageUrl(path?: string | null): string | null {
   if (!path) return null;
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+  // Preserve absolute public Supabase URLs exactly as returned by the API.
+  if (/^(https?:)?\/\//i.test(path) || path.startsWith('data:') || path.startsWith('blob:')) {
     return path;
   }
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
-  // Strip trailing '/api/v1' or '/api/v1/' to get base origin:
   const origin = apiBase.replace(/\/api\/v1\/?$/, '');
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${origin}${cleanPath}`;
 }
-
