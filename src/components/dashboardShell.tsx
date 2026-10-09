@@ -41,6 +41,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     ? 'brands'
     : pathname.startsWith('/activities')
     ? 'activities'
+    :pathname.startsWith("/suppliers")
+    ? "suppliers"
     : 'overview';
 
   const pageTitle =
@@ -52,6 +54,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       ? 'Brands Management'
       : activePage === 'activities'
       ? 'Activity & Audit Logs'
+      : activePage === "suppliers"
+      ? "Suppliers Management"
       : 'Inventory Overview';
 
   return (

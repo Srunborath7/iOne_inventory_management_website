@@ -36,7 +36,8 @@ export type IconName =
   | 'clock'
   | 'history'
   | 'activity'
-  | 'file-text';
+  | 'file-text'
+  | 'truck';
 
 export function UiIcon({
   name,
@@ -279,6 +280,14 @@ export function UiIcon({
         <line x1="16" y1="13" x2="8" y2="13" />
         <line x1="16" y1="17" x2="8" y2="17" />
         <polyline points="10 9 9 9 8 9" />
+      </>
+    ),
+    truck: (
+      <>
+        <path d="M10 17h4V5H2v12h3" />
+        <path d="M14 9h4l4 4v4h-3" />
+        <circle cx="7.5" cy="17.5" r="2.5" />
+        <circle cx="16.5" cy="17.5" r="2.5" />
       </>
     ),
   };

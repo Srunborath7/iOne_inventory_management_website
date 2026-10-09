@@ -13,14 +13,14 @@ interface SideBarProps {
   user: AuthUser | null;
   isOpen: boolean;
   onClose: () => void;
-  activePage: "overview" | "products" | "categories" | "brands" | "activities";
+  activePage: "overview" | "products" | "categories" | "brands" | "activities" | "suppliers";
 }
 
 interface NavItem {
   label: string;
   href: string;
   icon: IconName;
-  key?: "overview" | "products" | "categories" | "brands" | "activities";
+  key?: "overview" | "products" | "categories" | "brands" | "activities" | "suppliers";
   badge?: string;
 }
 
@@ -64,6 +64,12 @@ const navItems: NavItem[] = [
     label: "Inventory Health",
     href: "/dashboard#inventory",
     icon: "trending-up",
+  },
+  {
+    label: "Suppliers",
+    href: "/suppliers",
+    icon: "truck",
+    key: "suppliers",
   },
 ];
 
