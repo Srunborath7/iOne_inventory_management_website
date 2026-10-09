@@ -1,0 +1,32 @@
+export {
+  getWarehousesInventory,
+  getWarehouseInventory,
+  getWarehouseInventoryById,
+  getWarehousesInventoryById,
+  createWarehouseInventory,
+  createWarehousesInventory,
+  updateWarehouseInventory,
+  updateWarehousesInventory,
+  deleteWarehouseInventory,
+  deleteWarehousesInventory,
+  adjustWarehouseInventoryStock,
+  adjustWarehousesInventoryStock,
+  transferStock,
+} from './warehouses_inventory.api';
+
+export type {
+  WarehousesInventory,
+  WarehouseInventory,
+  CreateWarehousesInventoryInput,
+  CreateWarehouseInventoryInput,
+  UpdateWarehousesInventoryInput,
+  UpdateWarehouseInventoryInput,
+  AdjustStockInput,
+  StockTransferInput,
+  StockTransferResult,
+  StockTransferResponse,
+  WarehousesInventoryResponse,
+  WarehouseInventoryResponse,
+  WarehouseInventoryFilterParams,
+  WarehousesInventoryFilterParams,
+} from './type';

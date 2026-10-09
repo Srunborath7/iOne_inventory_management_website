@@ -42,7 +42,9 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     : pathname.startsWith('/activities')
     ? 'activities'
     :pathname.startsWith("/suppliers")
-    ? "suppliers"
+    ? 'suppliers'
+    : pathname.startsWith("/warehouse")
+    ? 'warehouses'
     : 'overview';
 
   const pageTitle =
@@ -56,6 +58,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       ? 'Activity & Audit Logs'
       : activePage === "suppliers"
       ? "Suppliers Management"
+      : activePage === "warehouses"
+      ? "Warehouses Management"
       : 'Inventory Overview';
 
   return (

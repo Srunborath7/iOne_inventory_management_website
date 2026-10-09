@@ -37,7 +37,12 @@ export type IconName =
   | 'history'
   | 'activity'
   | 'file-text'
-  | 'truck';
+  | 'truck'
+  | 'building-2'
+  | 'arrow-right-left'
+  | 'map-pin'
+  | 'package'
+  | 'boxes';
 
 export function UiIcon({
   name,
@@ -288,6 +293,52 @@ export function UiIcon({
         <path d="M14 9h4l4 4v4h-3" />
         <circle cx="7.5" cy="17.5" r="2.5" />
         <circle cx="16.5" cy="17.5" r="2.5" />
+      </>
+    ),
+    'building-2': (
+      <>
+        <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18" />
+        <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+        <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+        <path d="M10 6h4M10 10h4M10 14h4M10 18h4" />
+      </>
+    ),
+    'arrow-right-left': (
+      <>
+        <path d="m16 3 4 4-4 4" />
+        <path d="M20 7H4" />
+        <path d="m8 21-4-4 4-4" />
+        <path d="M4 17h16" />
+      </>
+    ),
+    'map-pin': (
+      <>
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+        <circle cx="12" cy="10" r="3" />
+      </>
+    ),
+    package: (
+      <>
+        <path d="m7.5 4.27 9 5.15" />
+        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+        <path d="m3.3 7 8.7 5 8.7-5" />
+        <path d="M12 22V12" />
+      </>
+    ),
+    boxes: (
+      <>
+        <path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z" />
+        <path d="m7 16.5-4.74-2.85" />
+        <path d="m7 16.5 5-3" />
+        <path d="M7 16.5v5.17" />
+        <path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z" />
+        <path d="m17 16.5-5-3" />
+        <path d="m17 16.5 4.74-2.85" />
+        <path d="M17 16.5v5.17" />
+        <path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z" />
+        <path d="M12 8 7.26 5.15" />
+        <path d="m12 8 4.74-2.85" />
+        <path d="M12 13.5V8" />
       </>
     ),
   };
