@@ -1,13 +1,13 @@
 export {
-  getSuppliers,
-  getSuppliersById,
-  createSuppliers,
-  updateSuppliers,
-  deleteSuppliers,
-} from './suppliers.api';
+  getCustomers,
+  getCustomersById,
+  createCustomers,
+  updateCustomers,
+  deleteCustomers,
+} from './customers.api';
 export type {
-  SuppliersResponse,
-  Suppliers,
-  CreateSuppliersInput,
-  UpdateSuppliersInput,
+  CustomersResponse,
+  Customers,
+  CreateCustomersInput,
+  UpdateCustomersInput,
 } from './type';

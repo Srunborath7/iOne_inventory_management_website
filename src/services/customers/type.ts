@@ -1,4 +1,4 @@
-export type Suppliers = {
+export type Customers = {
     id: number | string;
     name: string;
     age: number;
@@ -12,7 +12,7 @@ export type Suppliers = {
     updated_at?: string | null;
 };
 
-export type CreateSuppliersInput = {
+export type CreateCustomersInput = {
     name: string;
     age: number;
     gender: "male" | "female" | "other";
@@ -23,7 +23,7 @@ export type CreateSuppliersInput = {
     note?: string | null;
 };
 
-export type UpdateSuppliersInput = {
+export type UpdateCustomersInput = {
     name?: string | null;
     age?: number | null;
     gender?: "male" | "female" | "other" | null;
@@ -34,8 +34,8 @@ export type UpdateSuppliersInput = {
     note?: string | null;
 };
 
-export type SuppliersResponse = {
+export type CustomersResponse = {
     code?: string | number;
     msg?: string;
-    data: Suppliers[];
+    data: Customers[];
 };
