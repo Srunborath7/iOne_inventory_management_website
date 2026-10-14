@@ -13,14 +13,14 @@ interface SideBarProps {
   user: AuthUser | null;
   isOpen: boolean;
   onClose: () => void;
-  activePage: "overview" | "products" | "categories" | "brands" | "activities" | "suppliers" | "warehouses";
+  activePage: "overview" | "products" | "categories" | "brands" | "activities" | "stock-movements" | "suppliers" | "warehouses";
 }
 
 interface NavItem {
   label: string;
   href: string;
   icon: IconName;
-  key?: "overview" | "products" | "categories" | "brands" | "activities" | "suppliers" | "warehouses";
+  key?: "overview" | "products" | "categories" | "brands" | "activities" | "stock-movements" | "suppliers" | "warehouses";
   badge?: string;
 }
 
@@ -57,8 +57,9 @@ const navItems: NavItem[] = [
   },
   {
     label: "Stock Movement",
-    href: "/dashboard#stock-movement",
+    href: "/stock-movements",
     icon: "chart",
+    key: "stock-movements",
   },
   {
     label: "Inventory Health",

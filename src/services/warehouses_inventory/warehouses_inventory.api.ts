@@ -11,7 +11,34 @@ import type {
   StockTransferInput,
   StockTransferResponse,
   WarehouseInventoryFilterParams,
+  WarehouseInventoryMovement,
+  CreateWarehouseInventoryMovementInput,
 } from "./type";
+
+type WarehouseInventoryMovementEnvelope = {
+  data: WarehouseInventoryMovement[];
+};
+
+// Get stock movement history
+export async function getWarehouseInventoryMovements(): Promise<WarehouseInventoryMovement[]> {
+  const response = await httpClient.get<
+    WarehouseInventoryMovement[] | WarehouseInventoryMovementEnvelope
+  >("/stock-movements");
+
+  return Array.isArray(response) ? response : response.data;
+}
+
+// Record a stock movement; the backend should update stock and create its audit row atomically.
+export async function createWarehouseInventoryMovement(
+  input: CreateWarehouseInventoryMovementInput,
+): Promise<WarehouseInventoryMovement> {
+  return httpClient.post<WarehouseInventoryMovement>("/stock-movements", {
+    ...input,
+    product_id: Number(input.product_id),
+    warehouse_id: Number(input.warehouse_id),
+    quantity_change: Number(input.quantity_change),
+  });
+}
 
 // Get all warehouse inventory with optional filter parameters or pagination
 export async function getWarehousesInventory(

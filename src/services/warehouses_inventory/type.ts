@@ -10,6 +10,34 @@ export type WarehousesInventory = {
   updated_at: string;
 };
 
+/** A single stock movement returned by the warehouse inventory movement API. */
+export type WarehouseInventoryMovement = {
+  id: number;
+  product_id: number;
+  warehouse_id: number;
+  quantity_change: number;
+  movement_type: string;
+  reference: string;
+  user_id: number;
+  created_at: string;
+};
+
+export type WarehouseInventoryMovementType =
+  | 'received'
+  | 'sold'
+  | 'adjusted'
+  | 'returned';
+
+export type CreateWarehouseInventoryMovementInput = {
+  product_id: number;
+  warehouse_id: number;
+  quantity_change: number;
+  movement_type: WarehouseInventoryMovementType;
+  reference: string;
+};
+
+export type WarehouseInventoryMovementResponse = WarehouseInventoryMovement[];
+
 export type CreateWarehousesInventoryInput = {
   product_id: number;
   warehouses_id: number;

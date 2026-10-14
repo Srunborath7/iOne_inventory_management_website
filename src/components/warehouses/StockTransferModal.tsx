@@ -5,7 +5,7 @@ import { UiIcon } from '@/components/uiIcon';
 import type { Warehouses } from '@/services/warehouses';
 import type { WarehousesInventory } from '@/services/warehouses_inventory';
 import type { Product } from '@/services/products/type';
-import { transferStock } from '@/services/warehouses_inventory';
+import { transferStock } from '@/services/stock_transfers';
 import { useToast } from '@/components/toast/ToastContext';
 
 interface StockTransferModalProps {
@@ -67,10 +67,22 @@ export default function StockTransferModal({
     return sourceInventoryList[0]?.product_id ? Number(sourceInventoryList[0].product_id) : 0;
   });
 
+  const effectiveToWarehouseId = destinationWarehouses.some((w) => Number(w.id) === toWarehouseId)
+    ? toWarehouseId
+    : destinationWarehouses[0]?.id
+    ? Number(destinationWarehouses[0].id)
+    : 0;
+
+  const effectiveProductId = sourceInventoryList.some((i) => Number(i.product_id) === selectedProductId)
+    ? selectedProductId
+    : sourceInventoryList[0]?.product_id
+    ? Number(sourceInventoryList[0].product_id)
+    : 0;
+
   const currentAvailableStock = useMemo(() => {
-    const item = sourceInventoryList.find((i) => Number(i.product_id) === selectedProductId);
+    const item = sourceInventoryList.find((i) => Number(i.product_id) === effectiveProductId);
     return item ? item.quantity : 0;
-  }, [sourceInventoryList, selectedProductId]);
+  }, [sourceInventoryList, effectiveProductId]);
 
   const [quantity, setQuantity] = useState<number>(1);
   const [loading, setLoading] = useState(false);
@@ -79,22 +91,22 @@ export default function StockTransferModal({
   if (!isOpen) return null;
 
   const fromWarehouse = warehouses.find((w) => Number(w.id) === fromWarehouseId);
-  const toWarehouse = warehouses.find((w) => Number(w.id) === toWarehouseId);
-  const selectedProduct = products.find((p) => Number(p.id) === selectedProductId);
+  const toWarehouse = warehouses.find((w) => Number(w.id) === effectiveToWarehouseId);
+  const selectedProduct = products.find((p) => Number(p.id) === effectiveProductId);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError('');
 
-    if (!fromWarehouseId || !toWarehouseId) {
+    if (!fromWarehouseId || !effectiveToWarehouseId) {
       setError('Please select both origin and destination warehouses.');
       return;
     }
-    if (fromWarehouseId === toWarehouseId) {
+    if (fromWarehouseId === effectiveToWarehouseId) {
       setError('Origin and destination warehouses cannot be the same.');
       return;
     }
-    if (!selectedProductId) {
+    if (!effectiveProductId) {
       setError('Please select a product to transfer.');
       return;
     }
@@ -111,8 +123,8 @@ export default function StockTransferModal({
     try {
       await transferStock({
         from_warehouse_id: fromWarehouseId,
-        to_warehouse_id: toWarehouseId,
-        product_id: selectedProductId,
+        to_warehouse_id: effectiveToWarehouseId,
+        product_id: effectiveProductId,
         quantity,
       });
 
