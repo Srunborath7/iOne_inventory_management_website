@@ -10,6 +10,7 @@ export interface ToastItem {
   type: ToastType;
   message: string;
   title?: string;
+  onConfirm?: () => void;
 }
 
 interface ToastContextValue {
@@ -17,6 +18,7 @@ interface ToastContextValue {
   success: (message: string, title?: string) => void;
   error: (message: string, title?: string) => void;
   info: (message: string, title?: string) => void;
+  confirm: (message: string, onConfirm: () => void, title?: string) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -44,9 +46,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const success = useCallback((message: string, title?: string) => showToast(message, 'success', title), [showToast]);
   const error = useCallback((message: string, title?: string) => showToast(message, 'error', title), [showToast]);
   const info = useCallback((message: string, title?: string) => showToast(message, 'info', title), [showToast]);
+  const confirm = useCallback((message: string, onConfirm: () => void, title?: string) => {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    setToasts((prev) => [...prev.slice(-4), { id, type: 'info', message, title, onConfirm }]);
+  }, []);
 
   return (
-    <ToastContext.Provider value={{ showToast, success, error, info }}>
+    <ToastContext.Provider value={{ showToast, success, error, info, confirm }}>
       {children}
       {/* Toast container */}
       <div
@@ -92,6 +98,27 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <p className="text-xs font-medium leading-relaxed opacity-95">
                   {item.message}
                 </p>
+                {item.onConfirm && (
+                  <div className="mt-3 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => removeToast(item.id)}
+                      className="rounded-lg px-3 py-1.5 text-xs font-medium text-white/75 transition hover:bg-white/10 hover:text-white"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        removeToast(item.id);
+                        item.onConfirm?.();
+                      }}
+                      className="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-400"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                )}
               </div>
               <button
                 type="button"
