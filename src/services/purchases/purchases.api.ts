@@ -7,6 +7,7 @@ export type PurchaseOrderItem = {
   product_id: number;
   ordered_quantity: number;
   received_quantity: number;
+  returned_quantity?: number;
   unit_cost: string | number;
   product?: {
     id: number;
@@ -20,6 +21,9 @@ export type PurchaseOrder = {
   id: number;
   order_number: string;
   supplier_id: number;
+  supplier_name?: string;
+  warehouse_id: number;
+  warehouse_name?: string;
   status: string;
   ordered_at: string;
   expected_at?: string | null;
@@ -32,6 +36,7 @@ export type PurchaseOrder = {
 
 export type PurchaseReturnItem = {
   id: number;
+  purchase_order_item_id?: number | null;
   product_id: number;
   quantity: number;
   unit_cost: string | number;
@@ -47,6 +52,7 @@ export type PurchaseReturn = {
   id: number;
   return_number: string;
   supplier_id: number;
+  supplier_name?: string;
   purchase_order_id: number | null;
   returned_at: string;
   reason?: string | null;
@@ -67,6 +73,7 @@ export type PurchaseOrderItemInput = {
 export type CreatePurchaseOrderInput = {
   order_number: string;
   supplier_id: number;
+  warehouse_id: number;
   items: PurchaseOrderItemInput[];
   status?: string;
   ordered_at?: string | null;
@@ -75,6 +82,7 @@ export type CreatePurchaseOrderInput = {
 };
 
 export type PurchaseReturnItemInput = {
+  purchase_order_item_id: number | null;
   product_id: number;
   quantity: number;
   unit_cost: number;
@@ -89,8 +97,12 @@ export type CreatePurchaseReturnInput = {
   reason?: string | null;
 };
 
+export type UpdatePurchaseReturnInput = CreatePurchaseReturnInput;
+
 // ─── Orders ───────────────────────────────────────────────────────────────────
 
+// The API docs operation IDs use the `/api/v1` router prefix. These paths are
+// relative to NEXT_PUBLIC_API_BASE_URL (which defaults to `/api/v1`).
 const ordersPath = '/purchases/orders';
 const returnsPath = '/purchases/returns';
 
@@ -117,6 +129,32 @@ export async function createPurchaseOrder(input: CreatePurchaseOrderInput): Prom
   return httpClient.post<PurchaseOrder>(ordersPath, input);
 }
 
+export async function updatePurchaseOrder(
+  orderId: number,
+  input: CreatePurchaseOrderInput,
+): Promise<PurchaseOrder> {
+  return httpClient.put<PurchaseOrder>(`${ordersPath}/${orderId}`, input);
+}
+
+export async function deletePurchaseOrder(orderId: number): Promise<void> {
+  return httpClient.delete<void>(`${ordersPath}/${orderId}`);
+}
+
+export type ReceivePurchaseOrderInput = {
+  items: Array<{ item_id: number; quantity: number }>;
+};
+
+export async function markPurchaseOrderReady(orderId: number): Promise<PurchaseOrder> {
+  return httpClient.post<PurchaseOrder>(`${ordersPath}/${orderId}/ready`);
+}
+
+export async function receivePurchaseOrder(
+  orderId: number,
+  input: ReceivePurchaseOrderInput,
+): Promise<PurchaseOrder> {
+  return httpClient.post<PurchaseOrder>(`${ordersPath}/${orderId}/receive`, input);
+}
+
 // ─── Returns ──────────────────────────────────────────────────────────────────
 
 export async function getPurchaseReturns(
@@ -140,6 +178,17 @@ export async function getPurchaseReturn(returnId: number): Promise<PurchaseRetur
 
 export async function createPurchaseReturn(input: CreatePurchaseReturnInput): Promise<PurchaseReturn> {
   return httpClient.post<PurchaseReturn>(returnsPath, input);
+}
+
+export async function updatePurchaseReturn(
+  returnId: number,
+  input: UpdatePurchaseReturnInput,
+): Promise<PurchaseReturn> {
+  return httpClient.put<PurchaseReturn>(`${returnsPath}/${returnId}`, input);
+}
+
+export async function deletePurchaseReturn(returnId: number): Promise<void> {
+  return httpClient.delete<void>(`${returnsPath}/${returnId}`);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

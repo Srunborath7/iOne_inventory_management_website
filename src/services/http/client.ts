@@ -50,7 +50,10 @@ async function request<T>(method: string, path: string, options?: RequestInit): 
         parsedMessage = errorBody.detail;
       } else if (Array.isArray(errorBody.detail)) {
         parsedMessage = errorBody.detail
-          .map((item: { msg?: string; loc?: string[] }) => item.msg || JSON.stringify(item))
+          .map((item: { msg?: string; loc?: Array<string | number> }) => {
+            const location = item.loc?.filter((part) => part !== 'body').join('.');
+            return location ? `${location}: ${item.msg || 'Invalid value'}` : item.msg || JSON.stringify(item);
+          })
           .join(', ');
       } else if (typeof errorBody.detail === 'object') {
         parsedMessage = JSON.stringify(errorBody.detail);
