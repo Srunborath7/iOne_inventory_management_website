@@ -260,24 +260,71 @@ export default function ProductDetailModal({
               </div>
 
               {/* Stock Thresholds Card */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-3.5 text-xs">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-amber-700">
-                    Min Stock Alert
-                  </span>
-                  <span className="mt-1 block text-base font-bold text-amber-900">
-                    {product.min_stock ?? 0}{' '}
-                    <span className="text-xs font-normal text-amber-700">units</span>
-                  </span>
+              <div className="space-y-2.5">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-3.5 text-xs">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-amber-700">
+                      Min Stock Alert
+                    </span>
+                    <span className="mt-1 block text-base font-bold text-amber-900">
+                      {product.min_stock ?? 0}{' '}
+                      <span className="text-xs font-normal text-amber-700">units</span>
+                    </span>
+                  </div>
+                  <div className="rounded-2xl border border-teal-100 bg-teal-50/50 p-3.5 text-xs">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-teal-700">
+                      Max Stock Capacity
+                    </span>
+                    <span className="mt-1 block text-base font-bold text-teal-900">
+                      {product.max_stock ?? 0}{' '}
+                      <span className="text-xs font-normal text-teal-700">units</span>
+                    </span>
+                  </div>
                 </div>
-                <div className="rounded-2xl border border-teal-100 bg-teal-50/50 p-3.5 text-xs">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-teal-700">
-                    Max Stock Capacity
-                  </span>
-                  <span className="mt-1 block text-base font-bold text-teal-900">
-                    {product.max_stock ?? 0}{' '}
-                    <span className="text-xs font-normal text-teal-700">units</span>
-                  </span>
+
+                {/* Total Quantity & Stock Status */}
+                <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-4 py-3">
+                  <div className="text-xs">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Total Quantity (All Warehouses)
+                    </span>
+                    <span className="mt-0.5 block text-base font-bold text-slate-900">
+                      {product.total_quantity != null ? product.total_quantity : '—'}
+                      {product.total_quantity != null && (
+                        <span className="ml-1 text-xs font-normal text-slate-500">units</span>
+                      )}
+                    </span>
+                  </div>
+                  {product.stock_status && (
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
+                        product.stock_status === 'IN_STOCK'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : product.stock_status === 'LOW_STOCK'
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : product.stock_status === 'OUT_OF_STOCK'
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : product.stock_status === 'OVER_STOCK'
+                          ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200'
+                      }`}
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          product.stock_status === 'IN_STOCK'
+                            ? 'bg-emerald-500'
+                            : product.stock_status === 'LOW_STOCK'
+                            ? 'bg-amber-500'
+                            : product.stock_status === 'OUT_OF_STOCK'
+                            ? 'bg-rose-500'
+                            : product.stock_status === 'OVER_STOCK'
+                            ? 'bg-indigo-500'
+                            : 'bg-slate-400'
+                        }`}
+                      />
+                      {product.stock_status.replace(/_/g, ' ')}
+                    </span>
+                  )}
                 </div>
               </div>
 

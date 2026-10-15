@@ -43,6 +43,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     ? 'activities'
     : pathname.startsWith('/purchases')
     ? 'purchases'
+    : pathname.startsWith('/stock-movements')
+    ? 'stock-movements'
     :pathname.startsWith("/suppliers")
     ? 'suppliers'
     :pathname.startsWith("/customers")
@@ -62,6 +64,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       ? 'Activity & Audit Logs'
       : activePage === 'purchases'
       ? 'Purchases'
+      : activePage === 'stock-movements'
+      ? 'Stock Movements'
       : activePage === "suppliers"
       ? "Suppliers Management"
       : activePage === "customers"
