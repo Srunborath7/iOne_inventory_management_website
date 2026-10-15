@@ -60,7 +60,7 @@ export async function getMe(): Promise<AuthUser> {
     full_name: string;
     email: string;
     created_at?: string;
-  }>("/auth/me");
+  }>("/auths/me");
 
   return {
     id: data.id,
@@ -71,7 +71,7 @@ export async function getMe(): Promise<AuthUser> {
 }
 
 export async function login(payload: LoginRequest): Promise<AuthResponse> {
-  const response = await httpClient.post<unknown>("/auth/login", payload);
+  const response = await httpClient.post<unknown>("/auths/login", payload);
   const normalized = normalizeAuthResponse(response);
 
   // If the user object wasn't embedded in login response, fetch it via /auth/me
@@ -82,7 +82,7 @@ export async function login(payload: LoginRequest): Promise<AuthResponse> {
         full_name: string;
         email: string;
         created_at?: string;
-      }>("/auth/me", {
+      }>("/auths/me", {
         headers: { Authorization: `Bearer ${normalized.accessToken}` },
       });
       normalized.user = {
@@ -108,7 +108,7 @@ export async function register(
   payload: RegisterRequest,
 ): Promise<AuthResponse> {
   // FastAPI expects { full_name, email, password }
-  await httpClient.post<unknown>("/auth/register", {
+  await httpClient.post<unknown>("/auths/register", {
     full_name: payload.name,
     email: payload.email,
     password: payload.password,

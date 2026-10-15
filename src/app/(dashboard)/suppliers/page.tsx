@@ -12,6 +12,7 @@ import {
   type Suppliers,
 } from "@/services/suppliers";
 import { useToast } from "@/components/toast/ToastContext";
+import { formatDate } from "@/lib/format_date";
 
 type ViewMode = "grid" | "table";
 type SortOrder = "newest" | "oldest" | "alpha-asc" | "alpha-desc";
@@ -247,6 +248,8 @@ function SuppliersContent() {
                   <th className="px-5 py-3">Supplier</th>
                   <th className="px-5 py-3">Contact</th>
                   <th className="px-5 py-3">Phone</th>
+                  <th className="px-5 py-3">Create At</th>
+                  <th className="px-5 py-3">Update At</th>
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3 text-right">Actions</th>
                 </tr>
@@ -274,6 +277,12 @@ function SuppliersContent() {
                     </td>
                     <td className="px-5 py-4 text-slate-600">
                       {supplier.phone || "—"}
+                    </td>
+                    <td className="px-5 py-4 text-slate-600">
+                      {supplier.created_at || "—"}
+                    </td>
+                    <td className="px-5 py-4 text-slate-600">
+                      {supplier.updated_at || "—"}
                     </td>
                     <td className="px-5 py-4">
                       <span
@@ -331,6 +340,8 @@ function SuppliersContent() {
                 <dl className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-sm">
                   <div className="flex justify-between gap-3"><dt className="text-slate-500">Phone</dt><dd className="truncate font-medium text-slate-800">{supplier.phone || "—"}</dd></div>
                   <div className="flex justify-between gap-3"><dt className="text-slate-500">Address</dt><dd className="truncate text-right font-medium text-slate-800">{supplier.address || "—"}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-slate-500">Create At</dt><dd className="truncate text-right font-medium text-slate-800">{formatDate(supplier.created_at || "—")}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-slate-500">Update At</dt><dd className="truncate text-right font-medium text-slate-800">{formatDate(supplier.updated_at || "—")}</dd></div>
                 </dl>
                 <div className="mt-3 flex justify-end gap-1">
                   <button type="button" onClick={() => setDetail(supplier)} aria-label={`View ${supplier.name}`} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"><UiIcon name="eye" size={16} /></button>
