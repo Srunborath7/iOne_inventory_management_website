@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { clearSession } from "@/lib/session";
 import { UiIcon } from "@/components/uiIcon";
+import { useToast } from "@/components/toast/ToastContext";
 import type { AuthUser } from "@/services/auth/type";
 import { useEffect, useState } from "react";
 
@@ -92,6 +93,7 @@ export default function SideBar({
   activePage,
 }: SideBarProps) {
   const router = useRouter();
+  const toast = useToast();
 
   const [mounted, setMounted] = useState(false);
   const userName = mounted ? user?.name?.toUpperCase() || "UNKNOW" : "UNKNOW";
@@ -104,6 +106,10 @@ export default function SideBar({
     clearSession();
     onClose();
     router.replace("/auth/login");
+  }
+
+  function confirmSignOut() {
+    toast.confirm("Are you sure you want to sign out?", signOut, "Confirm sign out");
   }
 
   function renderNavLink(item: (typeof navItems)[number], isMobile = false) {
@@ -203,7 +209,7 @@ export default function SideBar({
         <div className="pt-4 border-t border-slate-100">
           <button
             type="button"
-            onClick={signOut}
+            onClick={confirmSignOut}
             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-rose-600 transition hover:bg-rose-50"
           >
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-rose-100 text-rose-600">
@@ -291,7 +297,7 @@ export default function SideBar({
             </div>
             <button
               type="button"
-              onClick={signOut}
+              onClick={confirmSignOut}
               title="Sign out"
               aria-label="Sign out"
               className="grid h-7 w-7 place-items-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 active:scale-95"
