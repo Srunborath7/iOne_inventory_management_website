@@ -251,6 +251,8 @@ function SuppliersContent() {
                   <th className="px-5 py-3">Create At</th>
                   <th className="px-5 py-3">Update At</th>
                   <th className="px-5 py-3">Status</th>
+                  <th className="px-5 py-3">Create At</th>
+                  <th className="px-5 py-3">Update At</th>
                   <th className="px-5 py-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -290,6 +292,12 @@ function SuppliersContent() {
                       >
                         {supplier.is_active === false ? "Inactive" : "Active"}
                       </span>
+                    </td>
+                    <td className="px-5 py-4 text-slate-600">
+                      {formatDate(supplier.created_at || "-")}
+                    </td>
+                    <td className="px-5 py-4 text-slate-600">
+                      {formatDate(supplier.updated_at || "-")}
                     </td>
                     <td className="px-5 py-4 text-right">
                       <div className="inline-flex gap-1">

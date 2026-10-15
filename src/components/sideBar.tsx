@@ -58,8 +58,9 @@ const navItems: NavItem[] = [
   },
   {
     label: "Stock Movement",
-    href: "/dashboard#stock-movement",
+    href: "/stock-movements",
     icon: "chart",
+    key: "stock-movements",
   },
   {
     label: "Inventory Health",

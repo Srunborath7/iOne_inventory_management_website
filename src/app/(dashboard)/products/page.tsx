@@ -176,7 +176,12 @@ function ProductsContent() {
     } else if (stockFilter === 'inactive') {
       list = list.filter((p) => !p.is_active);
     } else if (stockFilter === 'low-stock') {
-      list = list.filter((p) => (p.min_stock ?? 0) > 0);
+      list = list.filter(
+        (p) =>
+          p.stock_status === 'LOW_STOCK' ||
+          p.stock_status === 'OUT_OF_STOCK' ||
+          (p.stock_status == null && (p.total_quantity ?? 0) <= (p.min_stock ?? 0))
+      );
     }
 
     // Sorting
@@ -686,6 +691,47 @@ function ProductsContent() {
                       </span>
                     </div>
                   </div>
+
+                  {/* Total Quantity & Stock Status */}
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-500">
+                      Stock:{' '}
+                      <strong className="text-slate-800">
+                        {product.total_quantity != null ? product.total_quantity : '—'}
+                      </strong>
+                      {product.total_quantity != null && <span className="text-slate-400"> units</span>}
+                    </span>
+                    {product.stock_status && (
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                          product.stock_status === 'IN_STOCK'
+                            ? 'bg-emerald-50 text-emerald-700'
+                            : product.stock_status === 'LOW_STOCK'
+                            ? 'bg-amber-50 text-amber-700'
+                            : product.stock_status === 'OUT_OF_STOCK'
+                            ? 'bg-rose-50 text-rose-700'
+                            : product.stock_status === 'OVER_STOCK'
+                            ? 'bg-indigo-50 text-indigo-700'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            product.stock_status === 'IN_STOCK'
+                              ? 'bg-emerald-500'
+                              : product.stock_status === 'LOW_STOCK'
+                              ? 'bg-amber-500'
+                              : product.stock_status === 'OUT_OF_STOCK'
+                              ? 'bg-rose-500'
+                              : product.stock_status === 'OVER_STOCK'
+                              ? 'bg-indigo-500'
+                              : 'bg-slate-400'
+                          }`}
+                        />
+                        {product.stock_status.replace('_', ' ')}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Footer Card Actions */}
@@ -847,14 +893,51 @@ function ProductsContent() {
 
                       {/* Stock Limits */}
                       <td className="px-4 py-3.5">
-                        <div className="text-[11px]">
-                          <span className="text-slate-600">
-                            Min: <strong>{product.min_stock ?? 0}</strong>
-                          </span>
-                          <span className="mx-1 text-slate-300">•</span>
-                          <span className="text-slate-600">
-                            Max: <strong>{product.max_stock ?? 100}</strong>
-                          </span>
+                        <div className="space-y-1 text-[11px]">
+                          <div>
+                            <span className="text-slate-600">
+                              Min: <strong>{product.min_stock ?? 0}</strong>
+                            </span>
+                            <span className="mx-1 text-slate-300">•</span>
+                            <span className="text-slate-600">
+                              Max: <strong>{product.max_stock ?? 100}</strong>
+                            </span>
+                          </div>
+                          {product.total_quantity != null && (
+                            <span className="text-slate-500">
+                              Total: <strong className="text-slate-800">{product.total_quantity}</strong> units
+                            </span>
+                          )}
+                          {product.stock_status && (
+                            <span
+                              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                product.stock_status === 'IN_STOCK'
+                                  ? 'bg-emerald-50 text-emerald-700'
+                                  : product.stock_status === 'LOW_STOCK'
+                                  ? 'bg-amber-50 text-amber-700'
+                                  : product.stock_status === 'OUT_OF_STOCK'
+                                  ? 'bg-rose-50 text-rose-700'
+                                  : product.stock_status === 'OVER_STOCK'
+                                  ? 'bg-indigo-50 text-indigo-700'
+                                  : 'bg-slate-100 text-slate-600'
+                              }`}
+                            >
+                              <span
+                                className={`h-1.5 w-1.5 rounded-full ${
+                                  product.stock_status === 'IN_STOCK'
+                                    ? 'bg-emerald-500'
+                                    : product.stock_status === 'LOW_STOCK'
+                                    ? 'bg-amber-500'
+                                    : product.stock_status === 'OUT_OF_STOCK'
+                                    ? 'bg-rose-500'
+                                    : product.stock_status === 'OVER_STOCK'
+                                    ? 'bg-indigo-500'
+                                    : 'bg-slate-400'
+                                }`}
+                              />
+                              {product.stock_status.replace('_', ' ')}
+                            </span>
+                          )}
                         </div>
                       </td>
 

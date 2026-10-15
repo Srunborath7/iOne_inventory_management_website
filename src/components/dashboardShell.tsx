@@ -41,6 +41,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     ? 'brands'
     : pathname.startsWith('/activities')
     ? 'activities'
+    : pathname.startsWith('/stock-movements')
+    ? 'stock-movements'
     :pathname.startsWith("/suppliers")
     ? 'suppliers'
     :pathname.startsWith("/customers")
@@ -58,6 +60,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       ? 'Brands Management'
       : activePage === 'activities'
       ? 'Activity & Audit Logs'
+      : activePage === 'stock-movements'
+      ? 'Stock Movements'
       : activePage === "suppliers"
       ? "Suppliers Management"
       : activePage === "customers"

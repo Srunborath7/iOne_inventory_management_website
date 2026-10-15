@@ -21,6 +21,7 @@ export type {
   ProductResponse,
   Product,
   ProductCreator,
+  StockStatus,
   CreateProductInput,
   UpdateProductInput,
   ActivityLog,

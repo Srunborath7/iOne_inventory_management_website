@@ -37,6 +37,14 @@ export type ActivityLog = {
   diff?: ActivityDiff[];
 };
 
+/** Possible stock status values returned by the backend. */
+export type StockStatus =
+  | 'IN_STOCK'
+  | 'LOW_STOCK'
+  | 'OUT_OF_STOCK'
+  | 'OVER_STOCK'
+  | (string & Record<never, never>); // allow unknown future statuses
+
 export type Product = {
   id: number | string;
   name: string;
@@ -50,6 +58,10 @@ export type Product = {
   brand_id: number;
   category_id: number;
   is_active: boolean;
+  /** Aggregated quantity across all warehouses (returned by backend). */
+  total_quantity?: number | null;
+  /** Stock health status computed by the backend (e.g. "LOW_STOCK"). */
+  stock_status?: StockStatus | null;
   created_by?: number | string | null;
   creator?: ProductCreator | null;
   created_at?: string;
