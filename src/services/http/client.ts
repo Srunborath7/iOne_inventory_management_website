@@ -7,7 +7,11 @@ const BASE_URL = RAW_BASE.replace(/^['"]|['"]$/g, '').trim().replace(/\/+$/, '')
 
 async function request<T>(method: string, path: string, options?: RequestInit): Promise<T> {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  const url = `${BASE_URL}${cleanPath}`;
+  // Endpoints that include `/api/...` are rooted at the server origin rather
+  // than the configured versioned API base (for example `/api/v1`).
+  const url = cleanPath.startsWith('/api/')
+    ? `${new URL(BASE_URL).origin}${cleanPath}`
+    : `${BASE_URL}${cleanPath}`;
 
   const token = getAccessToken();
 
