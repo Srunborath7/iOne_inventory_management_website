@@ -14,14 +14,14 @@ interface SideBarProps {
   user: AuthUser | null;
   isOpen: boolean;
   onClose: () => void;
-  activePage: "overview" | "products" | "categories" | "brands" | "activities" | "stock-movements" | "suppliers" | "warehouses" | "customers";
+  activePage: "overview" | "products" | "categories" | "brands" | "activities" | "stock-movements" | "purchases" | "suppliers" | "warehouses" | "customers";
 }
 
 interface NavItem {
   label: string;
   href: string;
   icon: IconName;
-  key?: "overview" | "products" | "categories" | "brands" | "activities" | "stock-movements" | "suppliers" | "warehouses" | "customers";
+  key?: "overview" | "products" | "categories" | "brands" | "activities" | "stock-movements" | "purchases" | "suppliers" | "warehouses" | "customers";
   badge?: string;
 }
 
@@ -60,6 +60,12 @@ const navItems: NavItem[] = [
     label: "Stock Movement",
     href: "/dashboard#stock-movement",
     icon: "chart",
+  },
+  {
+    label: "Purchases",
+    href: "/purchases",
+    icon: "truck",
+    key: "purchases",
   },
   {
     label: "Inventory Health",
@@ -202,7 +208,7 @@ export default function SideBar({
           </button>
         </div>
 
-        <nav className="mt-5 space-y-1.5 flex-1 overflow-y-auto">
+        <nav className="mt-5 min-h-0 flex-1 space-y-1.5 overflow-y-auto overscroll-contain">
           {navItems.map((item) => renderNavLink(item, true))}
         </nav>
 
@@ -221,7 +227,7 @@ export default function SideBar({
       </aside>
 
       {/* Desktop Sticky Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] flex-col border-r border-slate-200/80 bg-white/95 px-4 pb-4 pt-5 backdrop-blur-md md:flex">
+      <aside aria-label="Desktop navigation" className="fixed inset-y-0 left-0 z-30 hidden w-[252px] flex-col overflow-y-auto border-r border-slate-200/80 bg-white/95 px-4 pb-4 pt-5 backdrop-blur-md md:flex">
         {/* Brand Header */}
         <Link
           href="/dashboard"
@@ -257,7 +263,7 @@ export default function SideBar({
         </p>
 
         {/* Nav Links */}
-        <nav className="flex flex-col gap-1">
+        <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain">
           {navItems.map((item) => renderNavLink(item))}
         </nav>
 
